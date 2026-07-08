@@ -1,0 +1,6 @@
+﻿api_keys.json
+__pycache__/
+*.py[cod]
+.venv/
+*.mp3
+*.mp4
