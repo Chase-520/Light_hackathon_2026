@@ -5,7 +5,7 @@ import requests
 from api_config import load_api_key
 
 
-API_KEY = "sk-omg-4ba53481ee56f8d3afee5cf66c6defe25ca2ff93bcae95113a41432b1ed34a88"# load_api_key("ominigate_api_key")
+API_KEY = ""# load_api_key("ominigate_api_key")
 BASE_URL = "https://api.ominigate.ai"
 
 # Step 1: Submit image-to-video generation

@@ -1,49 +1,58 @@
-import requests
+﻿import requests
 import time
+from api_config import load_api_key
 
-API_KEY = ""
-BASE_URL = "https://api.ominigate.ai"
-
-# Step 1: Submit image-to-video generation
+# Step 1: Submit the text-to-video task
+API_KEY = load_api_key("ominigate_api_key")
+print(API_KEY)
 response = requests.post(
-    f"{BASE_URL}/v1/videos/bytedance/generations",
+    "https://api.ominigate.ai/v1/videos/google/text2video",
     headers={
-        "Content-Type": "application/json",
         "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json",
     },
     json={
-        "model": "dreamina-seedance-2-0-fast-260128-face",
-        "content": [
+        "model": "veo-2.0-generate-001",
+        "instances": [
             {
-                "type": "text",
-                "text": "A cat slowly turning its head, natural movement"
-            },
+                "prompt": "A cinematic aerial shot of a coastal city at sunset, "
+                "golden light reflecting off the ocean waves, "
+                "seagulls flying in the foreground"
+            }
         ],
-        "resolution": "720p",
-        "ratio": "16:9",
-        "duration": 5,
+        "parameters": {
+            "aspectRatio": "16:9",
+            "durationSeconds": 8,
+            "sampleCount": 1,
+        },
     },
 )
-task = response.json()
-print(task)
-task_id = task["id"]
-print(f"Task submitted: {task_id}")
 
-# Step 2: Poll for results
+operation = response.json()
+operation_name = operation["name"]
+print(f"Submitted. Operation: {operation_name}")
+
+# Step 2: Poll for the result
 while True:
-    result = requests.get(
-        f"{BASE_URL}/v1/videos/bytedance/single-task/{task_id}",
-        headers={"Authorization": f"Bearer {API_KEY}"},
-    ).json()
+    time.sleep(15)
+    poll = requests.post(
+        "https://api.ominigate.ai/v1/videos/google/process",
+        headers={
+            "Authorization": f"Bearer {API_KEY}",
+            "Content-Type": "application/json",
+        },
+        json={"operationName": operation_name},
+    )
 
-    status = result["status"]
-    print(f"Status: {status}")
-
-    if status == "succeeded":
-        print(f"Video URL: {result['content']['video_url']}")
+    print("Status:", poll.status_code)
+    print("Raw response:", repr(poll.text))   # 用 repr 显示转义字符
+    # 然后尝试解析
+    result = poll.json()
+    if result.get("done"):
+        if "error" in result:
+            print("Error:", result["error"]["message"])
+        else:
+            for video in result["response"]["videos"]:
+                print("Video URL:", video["gcsUri"])
         break
-    elif status == "failed":
-        print(f"Error: {result['error']}")
-        break
-
-    time.sleep(8)
+    print("Processing...")
