@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DreamEcho 梦境重现</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="phone">
+        <nav class="topbar">
+          <div>
+            <p class="eyebrow">DreamEcho</p>
+            <h1>梦境重现</h1>
+          </div>
+          <button class="icon-btn" id="resetBtn" title="重置演示">↻</button>
+        </nav>
+
+        <section class="screen active" data-screen="home">
+          <div class="hero">
+            <div class="orb"></div>
+            <p>昨晚梦境线索已整理完成</p>
+            <strong>AI 将用睡眠数据和你的描述，重建一段接近主观记忆的梦境视频。</strong>
+          </div>
+
+          <div class="score-row">
+            <div class="score-card">
+              <span>睡眠评分</span>
+              <strong>78</strong>
+              <small>REM 心率波动较明显</small>
+            </div>
+            <div class="score-card">
+              <span>压力信号</span>
+              <strong>中</strong>
+              <small>梦话情绪偏紧张</small>
+            </div>
+          </div>
+
+          <section class="panel">
+            <h2>梦境关键词</h2>
+            <div class="chips">
+              <span>海边</span>
+              <span>门</span>
+              <span>找不到</span>
+              <span>不要走</span>
+              <span>紫色天空</span>
+            </div>
+          </section>
+
+          <section class="panel">
+            <h2>AI 初步线索</h2>
+            <p class="muted">03:12 至 03:35 的 REM 阶段里，你出现梦话、心率上升和连续体动。梦境可能包含寻找、分离、出口或童年记忆相关的片段。</p>
+          </section>
+
+          <div class="actions">
+            <button class="secondary" data-go="sleep">查看睡眠数据</button>
+            <button class="primary" data-go="questions">开始三轮追问</button>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="sleep">
+          <div class="section-head">
+            <button class="back" data-go="home">‹</button>
+            <div>
+              <p class="eyebrow">Sleep Timeline</p>
+              <h2>睡眠数据分析</h2>
+            </div>
+          </div>
+
+          <section class="panel">
+            <h3>睡眠阶段</h3>
+            <div class="sleep-chart" aria-label="睡眠阶段图">
+              <span class="light" style="width: 18%">浅睡</span>
+              <span class="deep" style="width: 24%">深睡</span>
+              <span class="light" style="width: 16%">浅睡</span>
+              <span class="rem" style="width: 20%">REM</span>
+              <span class="light" style="width: 22%">浅睡</span>
+            </div>
+            <div class="time-row">
+              <span>23:48 入睡</span>
+              <span>07:06 醒来</span>
+            </div>
+          </section>
+
+          <section class="metrics">
+            <article><span>总睡眠</span><strong>7h 18m</strong></article>
+            <article><span>深睡</span><strong>1h 46m</strong></article>
+            <article><span>REM</span><strong>1h 22m</strong></article>
+            <article><span>翻身</span><strong>34 次</strong></article>
+            <article><span>平均心率</span><strong>68 bpm</strong></article>
+            <article><span>呼吸频率</span><strong>15/min</strong></article>
+          </section>
+
+          <section class="panel">
+            <h3>梦话转写</h3>
+            <div class="transcript">
+              <p><b>03:20</b> “不要走……”</p>
+              <p><b>03:22</b> “门打不开。”</p>
+              <p><b>03:31</b> “我找不到路。”</p>
+            </div>
+          </section>
+
+          <section class="panel">
+            <h3>时间轴对齐</h3>
+            <ul class="timeline">
+              <li><b>03:12</b><span>进入 REM 阶段</span></li>
+              <li><b>03:18</b><span>心率从 62 上升到 78</span></li>
+              <li><b>03:20</b><span>出现梦话“不要走”</span></li>
+              <li><b>03:21</b><span>连续翻身 2 次，呼吸变快</span></li>
+              <li><b>03:35</b><span>REM 阶段结束</span></li>
+            </ul>
+          </section>
+
+          <button class="primary full" data-go="questions">继续追问</button>
+        </section>
+
+        <section class="screen" data-screen="questions">
+          <div class="section-head">
+            <button class="back" data-go="home">‹</button>
+            <div>
+              <p class="eyebrow">3 Rounds</p>
+              <h2>梦境追问</h2>
+            </div>
+          </div>
+
+          <div class="progress">
+            <span class="active"></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <section class="question-card active" data-step="0">
+            <p class="tag">第 1 轮：画面与视觉</p>
+            <h3>结合“门打不开”和 REM 心率上升，哪一个画面最接近你的梦？</h3>
+            <p class="muted">AI 会根据你的选择提取场景、颜色、光线和关键物体，用于视频画面生成。</p>
+            <div class="option-group" data-question="visual">
+              <button class="option selected" data-value="夜晚海边，深紫色天空，远处有一扇发光的门，黑色沙滩和缓慢海浪。"><b>A</b><span>夜晚海边，有发光的门和紫色天空</span></button>
+              <button class="option" data-value="狭长走廊，尽头有一扇打不开的门，灯光忽明忽暗。"><b>B</b><span>狭长走廊，尽头有一扇打不开的门</span></button>
+              <button class="option" data-value="熟悉但变形的房间，门后有暖光，空间像童年记忆。"><b>C</b><span>熟悉房间，门后有暖光和童年感</span></button>
+              <button class="option" data-value=""><b>D</b><span>以上内容都不在梦境中</span></button>
+            </div>
+          </section>
+
+          <section class="question-card" data-step="1">
+            <p class="tag">第 2 轮：情绪、氛围与感官</p>
+            <h3>根据梦话“不要走”和呼吸变快，哪种感受更接近梦里的氛围？</h3>
+            <p class="muted">这一轮会同时判断情绪、声音、温度和身体感受。</p>
+            <div class="option-group" data-question="emotion">
+              <button class="option selected" data-value="有点焦虑和孤独，但不是恐怖；能听见远处海浪声或呼唤声，空气偏冷。"><b>A</b><span>焦虑、孤独，远处有人声或海浪声</span></button>
+              <button class="option" data-value="压抑和紧张，像被困住；空间很窄，声音有回声。"><b>B</b><span>压抑、被困住，空间狭窄有回声</span></button>
+              <button class="option" data-value="怀念和温暖，画面柔和；身体像慢慢靠近一束光。"><b>C</b><span>怀念、温暖，像靠近一束光</span></button>
+              <button class="option" data-value=""><b>D</b><span>以上内容都不在梦境中</span></button>
+            </div>
+          </section>
+
+          <section class="question-card" data-step="2">
+            <p class="tag">第 3 轮：人物、事件与结尾</p>
+            <h3>结合“我找不到路”和连续翻身，哪条事件线更像你的梦？</h3>
+            <p class="muted">这一轮会帮助 AI 判断人物、关键事件和梦境结尾。</p>
+            <div class="option-group" data-question="event">
+              <button class="option selected" data-value="一直想追上一个看不清的人；门后像小时候的家，但靠近时门退到更远，最后停在门缝里的暖光。"><b>A</b><span>追一个看不清的人，门后像小时候的家</span></button>
+              <button class="option" data-value="不断寻找出口，却总回到同一个地方；最后停在一扇打不开的门前。"><b>B</b><span>一直找出口，最后回到打不开的门前</span></button>
+              <button class="option" data-value="有人正在离开，你想挽留但说不出话；最后只剩远处的背影或声音。"><b>C</b><span>有人离开，你想挽留但说不出话</span></button>
+              <button class="option" data-value=""><b>D</b><span>以上内容都不在梦境中</span></button>
+            </div>
+          </section>
+
+          <section class="panel">
+            <h3>自由补充</h3>
+            <textarea id="extraInput">醒来以后还有一种想回去看清楚的感觉。</textarea>
+          </section>
+
+          <div class="actions">
+            <button class="secondary" id="prevQuestion">上一轮</button>
+            <button class="primary" id="nextQuestion">下一轮</button>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="draft">
+          <div class="section-head">
+            <button class="back" data-go="questions">‹</button>
+            <div>
+              <p class="eyebrow">Dream Draft</p>
+              <h2>梦境草稿确认</h2>
+            </div>
+          </div>
+
+          <section class="panel">
+            <h3>AI 理解到的梦境</h3>
+            <p id="draftText" class="dream-copy"></p>
+          </section>
+
+          <section class="panel">
+            <h3>微调内容</h3>
+            <textarea id="refineInput" placeholder="如果有不准确的地方，可以在这里修改。">保留海边、门和童年家的感觉，但不要太恐怖，要更像模糊记忆。</textarea>
+          </section>
+
+          <button class="primary full" id="generateBtn">确认并生成梦境视频</button>
+        </section>
+
+        <section class="screen" data-screen="result">
+          <div class="section-head">
+            <button class="back" data-go="draft">‹</button>
+            <div>
+              <p class="eyebrow">Result</p>
+              <h2>梦境重现结果</h2>
+            </div>
+          </div>
+
+          <section class="video-preview">
+            <div class="moon"></div>
+            <div class="door"></div>
+            <div class="waves"></div>
+            <p>夜海尽头的门</p>
+          </section>
+          <p class="disclaimer">本视频为 AI 艺术化梦境重建，基于睡眠数据与用户描述生成，并非真实梦境记录。</p>
+
+          <section class="panel">
+            <h3>视频生成 Prompt</h3>
+            <p id="videoPrompt" class="prompt"></p>
+          </section>
+
+          <section class="panel">
+            <h3>分镜脚本</h3>
+            <div id="storyboard" class="storyboard"></div>
+          </section>
+
+          <section class="panel">
+            <h3>配乐与音效</h3>
+            <p id="musicText" class="muted"></p>
+          </section>
+
+          <section class="panel">
+            <h3>解梦</h3>
+            <p id="interpretation" class="dream-copy"></p>
+          </section>
+
+          <section class="panel">
+            <h3>健康建议与压力判断</h3>
+            <p id="healthText" class="dream-copy"></p>
+          </section>
+
+          <section class="panel">
+            <h3>AI 相似度分析</h3>
+            <div class="similarity-card">
+              <strong id="similarityValue">82%</strong>
+              <span>预计梦境贴近度</span>
+            </div>
+            <p id="similarityReason" class="dream-copy"></p>
+          </section>
+
+          <div class="actions">
+            <button class="secondary" id="saveBtn">保存到梦境日记</button>
+            <button class="primary" data-go="journal">查看日记</button>
+          </div>
+        </section>
+
+        <section class="screen" data-screen="journal">
+          <div class="section-head">
+            <button class="back" data-go="result">‹</button>
+            <div>
+              <p class="eyebrow">Journal</p>
+              <h2>梦境日记</h2>
+            </div>
+          </div>
+
+          <section class="journal-list" id="journalList"></section>
+        </section>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
