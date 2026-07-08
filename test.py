@@ -2,57 +2,56 @@
 import time
 from api_config import load_api_key
 
-# Step 1: Submit the text-to-video task
 API_KEY = load_api_key("ominigate_api_key")
-print(API_KEY)
+BASE_URL = "https://api.ominigate.ai"
+
+# Step 1: Submit image-to-video generation
 response = requests.post(
-    "https://api.ominigate.ai/v1/videos/google/text2video",
+    f"{BASE_URL}/v1/videos/bytedance/generations",
     headers={
-        "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json",
+        "Authorization": f"Bearer {API_KEY}",
     },
     json={
-        "model": "veo-2.0-generate-001",
-        "instances": [
+        "model": "dreamina-seedance-2-0-fast-260128",
+        "content": [
             {
-                "prompt": "A cinematic aerial shot of a coastal city at sunset, "
-                "golden light reflecting off the ocean waves, "
-                "seagulls flying in the foreground"
+                "type": "text",
+                "text": "A cat slowly turning its head, natural movement, peaceful jazz music playing in the background"
+            },
+            {
+                "type": "image_url",
+                "image_url": {
+                    "url": "https://betterwithcats.net/wp-content/uploads/2022/08/cat-is-laying-on-a-old-wooden-table.jpg"
+                },
+                "role": "first_frame"
             }
         ],
-        "parameters": {
-            "aspectRatio": "16:9",
-            "durationSeconds": 8,
-            "sampleCount": 1,
-        },
+        "resolution": "720p",
+        "ratio": "16:9",
+        "duration": 5,
     },
 )
+task = response.json()
+print(task)
+task_id = task["id"]
+print(f"Task submitted: {task_id}")
 
-operation = response.json()
-operation_name = operation["name"]
-print(f"Submitted. Operation: {operation_name}")
-
-# Step 2: Poll for the result
+# Step 2: Poll for results
 while True:
-    time.sleep(15)
-    poll = requests.post(
-        "https://api.ominigate.ai/v1/videos/google/process",
-        headers={
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json",
-        },
-        json={"operationName": operation_name},
-    )
+    result = requests.get(
+        f"{BASE_URL}/v1/videos/bytedance/single-task/{task_id}",
+        headers={"Authorization": f"Bearer {API_KEY}"},
+    ).json()
 
-    print("Status:", poll.status_code)
-    print("Raw response:", repr(poll.text))   # 用 repr 显示转义字符
-    # 然后尝试解析
-    result = poll.json()
-    if result.get("done"):
-        if "error" in result:
-            print("Error:", result["error"]["message"])
-        else:
-            for video in result["response"]["videos"]:
-                print("Video URL:", video["gcsUri"])
+    status = result["status"]
+    print(f"Status: {status}")
+
+    if status == "succeeded":
+        print(f"Video URL: {result['content']['video_url']}")
         break
-    print("Processing...")
+    elif status == "failed":
+        print(f"Error: {result['error']}")
+        break
+
+    time.sleep(8)
