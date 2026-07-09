@@ -21,6 +21,7 @@ const replaySubtitle = document.querySelector("#replaySubtitle");
 const replayText = document.querySelector("#replayText");
 const replayQuote = document.querySelector("#replayQuote");
 const replayVideo = document.querySelector("#replayVideo");
+const videoPanels = [...document.querySelectorAll(".video-panel")];
 
 let activeScreen = "map";
 let todayLit = false;
@@ -155,11 +156,50 @@ function openReplay(id) {
   replayVideo.pause();
   replayVideo.src = data.video;
   replayVideo.load();
+  syncVideoPanel(replayVideo);
   replayTitle.textContent = data.title;
   replaySubtitle.textContent = data.subtitle;
   replayText.textContent = data.text;
   replayQuote.textContent = data.quote;
   showScreen("replay");
+}
+
+function syncVideoPanel(video) {
+  const panel = video.closest(".video-panel");
+  const icon = panel?.querySelector(".video-play-btn span");
+  if (!panel || !icon) return;
+  panel.classList.toggle("is-playing", !video.paused && !video.ended);
+  icon.textContent = video.paused || video.ended ? "play_arrow" : "pause";
+}
+
+function setupVideoControls() {
+  videoPanels.forEach((panel) => {
+    const video = panel.querySelector("video");
+    const button = panel.querySelector(".video-play-btn");
+    if (!video || !button) return;
+
+    const toggleVideo = async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      try {
+        if (video.paused || video.ended) {
+          await video.play();
+        } else {
+          video.pause();
+        }
+      } catch (error) {
+        showToast("Tap the video controls to start playback.");
+      }
+      syncVideoPanel(video);
+    };
+
+    button.addEventListener("click", toggleVideo);
+    button.addEventListener("touchend", toggleVideo, { passive: false });
+    video.addEventListener("play", () => syncVideoPanel(video));
+    video.addEventListener("pause", () => syncVideoPanel(video));
+    video.addEventListener("ended", () => syncVideoPanel(video));
+    video.addEventListener("loadedmetadata", () => syncVideoPanel(video));
+  });
 }
 
 function activateLandmark(landmark) {
@@ -288,4 +328,5 @@ backToMapBtn.addEventListener("click", () => showScreen("map"));
 skipQuestionBtn.addEventListener("click", advanceQuestion);
 nextQuestionBtn.addEventListener("click", advanceQuestion);
 
+setupVideoControls();
 renderQuestion();

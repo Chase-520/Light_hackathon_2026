@@ -472,8 +472,52 @@ button { border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .chips button { padding: 7px 12px; border-radius: 999px; color: var(--muted); background: rgba(244, 239, 231, .055); border: 1px solid var(--line); font-size: 12px; }
 
-.video-panel { margin-top: 18px; overflow: hidden; }
-.video-panel video { display: block; width: 100%; aspect-ratio: 16/9; background: #000; }
+.video-panel {
+  position: relative;
+  margin-top: 18px;
+  overflow: hidden;
+  background: #000;
+  backdrop-filter: none;
+  touch-action: manipulation;
+}
+
+.video-panel video {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.video-play-btn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #101112;
+  background: rgba(244, 239, 231, .92);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .32);
+  transform: translate(-50%, -50%);
+  transition: opacity .2s var(--ease), transform .2s var(--ease);
+}
+
+.video-play-btn span {
+  font-size: 34px;
+}
+
+.video-panel.is-playing .video-play-btn {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(.92);
+}
 .replay-video { margin-bottom: 18px; }
 
 .result-hero,
