@@ -1,274 +1,225 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DreamEcho 梦境重现</title>
+    <title>Oneiros</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Noto+Sans+SC:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,1,0"
+    />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main class="app-shell">
-      <section class="phone">
-        <nav class="topbar">
-          <div>
-            <p class="eyebrow">DreamEcho</p>
-            <h1>梦境重现</h1>
-          </div>
-          <button class="icon-btn" id="resetBtn" title="重置演示">↻</button>
-        </nav>
+    <div class="app-shell">
+      <div class="ambient"></div>
 
-        <section class="screen active" data-screen="home">
-          <div class="hero">
-            <div class="orb"></div>
-            <p>昨晚梦境线索已整理完成</p>
-            <strong>AI 将用睡眠数据和你的描述，重建一段接近主观记忆的梦境视频。</strong>
-          </div>
+      <header class="topbar">
+        <button class="brand" id="backBtn" type="button" aria-label="Go back">
+          <span class="material-symbols-rounded back-icon">arrow_back</span>
+          <span class="brand-mark">O</span>
+          <strong>Oneiros</strong>
+        </button>
+        <button class="icon-btn" id="homeBtn" type="button" aria-label="Return to dream map">
+          <span class="material-symbols-rounded">map</span>
+        </button>
+      </header>
 
-          <div class="score-row">
-            <div class="score-card">
-              <span>睡眠评分</span>
-              <strong>78</strong>
-              <small>REM 心率波动较明显</small>
-            </div>
-            <div class="score-card">
-              <span>压力信号</span>
-              <strong>中</strong>
-              <small>梦话情绪偏紧张</small>
-            </div>
-          </div>
-
-          <section class="panel">
-            <h2>梦境关键词</h2>
-            <div class="chips">
-              <span>海边</span>
-              <span>门</span>
-              <span>找不到</span>
-              <span>不要走</span>
-              <span>紫色天空</span>
-            </div>
+      <main>
+        <section class="screen active" data-screen="map">
+          <section class="map-hero">
+            <p>Dream Map</p>
+            <h1>Light the coordinates left by last night's dream</h1>
+            <span id="unlockCount">1 / 8 landmarks unlocked</span>
           </section>
 
-          <section class="panel">
-            <h2>AI 初步线索</h2>
-            <p class="muted">03:12 至 03:35 的 REM 阶段里，你出现梦话、心率上升和连续体动。梦境可能包含寻找、分离、出口或童年记忆相关的片段。</p>
+          <section class="dream-map card" aria-label="Interactive dream map">
+            <svg viewBox="0 0 360 460" role="img" aria-label="Oneiros dream map">
+              <defs>
+                <linearGradient id="mapLine" x1="0" x2="1" y1="0" y2="1">
+                  <stop offset="0" stop-color="#c7c8ff" />
+                  <stop offset="1" stop-color="#f4c58e" />
+                </linearGradient>
+                <filter id="softGlow">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <path class="map-path" d="M52 378 C86 305, 58 252, 126 218 S230 198, 212 132 S257 60, 310 82" />
+              <path class="map-path faint" d="M42 120 C94 102, 129 132, 162 94 S234 36, 302 54" />
+              <path class="map-path faint" d="M70 414 C150 395, 195 420, 302 350" />
+
+              <g class="landmark unlocked" data-id="bay" data-title="Stardust Bay" transform="translate(68 365)" tabindex="0">
+                <circle r="18" />
+                <text y="6">L</text>
+              </g>
+              <g class="landmark locked" id="todayLandmark" data-id="forest" data-title="Clockwood" transform="translate(135 218)" tabindex="0">
+                <circle r="18" />
+                <text y="6">?</text>
+              </g>
+              <g class="landmark locked" data-id="station" data-title="Mirror Station" transform="translate(214 132)" tabindex="0">
+                <circle r="18" />
+                <text y="6">?</text>
+              </g>
+              <g class="landmark locked" data-id="corridor" data-title="Moonlit Corridor" transform="translate(310 82)" tabindex="0">
+                <circle r="18" />
+                <text y="6">?</text>
+              </g>
+            </svg>
+
+            <article class="map-card" id="mapInfo">
+              <small>Default unlocked landmark</small>
+              <h2>Stardust Bay</h2>
+              <p>Tap unlocked landmarks to replay the generated dream video and interpretation.</p>
+            </article>
           </section>
 
-          <div class="actions">
-            <button class="secondary" data-go="sleep">查看睡眠数据</button>
-            <button class="primary" data-go="questions">开始三轮追问</button>
-          </div>
+          <button class="primary-action" id="startLightBtn" type="button">
+            <span class="material-symbols-rounded">auto_awesome</span>
+            Light
+          </button>
         </section>
 
-        <section class="screen" data-screen="sleep">
-          <div class="section-head">
-            <button class="back" data-go="home">‹</button>
-            <div>
-              <p class="eyebrow">Sleep Timeline</p>
-              <h2>睡眠数据分析</h2>
-            </div>
+        <section class="screen" data-screen="capture">
+          <div class="step-head">
+            <span>Step 1 / 4</span>
+            <h1>Light a Dream</h1>
+            <p>Oneiros has collected fragments of sleep talk from last night. Tap a bubble to replay it.</p>
           </div>
 
-          <section class="panel">
-            <h3>睡眠阶段</h3>
-            <div class="sleep-chart" aria-label="睡眠阶段图">
-              <span class="light" style="width: 18%">浅睡</span>
-              <span class="deep" style="width: 24%">深睡</span>
-              <span class="light" style="width: 16%">浅睡</span>
-              <span class="rem" style="width: 20%">REM</span>
-              <span class="light" style="width: 22%">浅睡</span>
-            </div>
-            <div class="time-row">
-              <span>23:48 入睡</span>
-              <span>07:06 醒来</span>
-            </div>
+          <section class="bubble-stage card">
+            <button class="voice-bubble bubble-a" type="button" data-voice="Don't go yet.">
+              <span>Don't go yet.</span>
+              <small>03:20</small>
+            </button>
+            <button class="voice-bubble bubble-b" type="button" data-voice="The door will not open.">
+              <span>The door will not open.</span>
+              <small>04:08</small>
+            </button>
+            <button class="voice-bubble bubble-c" type="button" data-voice="The key is under the pool.">
+              <span>The key is under the pool.</span>
+              <small>05:11</small>
+            </button>
+            <button class="voice-bubble bubble-d" type="button" data-voice="There is a light behind it.">
+              <span>There is a light behind it.</span>
+              <small>05:47</small>
+            </button>
           </section>
 
-          <section class="metrics">
-            <article><span>总睡眠</span><strong>7h 18m</strong></article>
-            <article><span>深睡</span><strong>1h 46m</strong></article>
-            <article><span>REM</span><strong>1h 22m</strong></article>
-            <article><span>翻身</span><strong>34 次</strong></article>
-            <article><span>平均心率</span><strong>68 bpm</strong></article>
-            <article><span>呼吸频率</span><strong>15/min</strong></article>
-          </section>
-
-          <section class="panel">
-            <h3>梦话转写</h3>
-            <div class="transcript">
-              <p><b>03:20</b> “不要走……”</p>
-              <p><b>03:22</b> “门打不开。”</p>
-              <p><b>03:31</b> “我找不到路。”</p>
-            </div>
-          </section>
-
-          <section class="panel">
-            <h3>时间轴对齐</h3>
-            <ul class="timeline">
-              <li><b>03:12</b><span>进入 REM 阶段</span></li>
-              <li><b>03:18</b><span>心率从 62 上升到 78</span></li>
-              <li><b>03:20</b><span>出现梦话“不要走”</span></li>
-              <li><b>03:21</b><span>连续翻身 2 次，呼吸变快</span></li>
-              <li><b>03:35</b><span>REM 阶段结束</span></li>
-            </ul>
-          </section>
-
-          <button class="primary full" data-go="questions">继续追问</button>
+          <div class="action-row">
+            <button class="secondary-action" type="button" data-go="map">Back to map</button>
+            <button class="primary-action compact" type="button" data-go="questions">Continue</button>
+          </div>
         </section>
 
         <section class="screen" data-screen="questions">
-          <div class="section-head">
-            <button class="back" data-go="home">‹</button>
-            <div>
-              <p class="eyebrow">3 Rounds</p>
-              <h2>梦境追问</h2>
-            </div>
+          <div class="step-head">
+            <span>Step 2 / 4</span>
+            <h1 id="questionTitle">Question</h1>
+            <p id="questionHint">Answer lightly. You can skip any question.</p>
           </div>
 
-          <div class="progress">
-            <span class="active"></span>
-            <span></span>
-            <span></span>
-          </div>
-
-          <section class="question-card active" data-step="0">
-            <p class="tag">第 1 轮：画面与视觉</p>
-            <h3>结合“门打不开”和 REM 心率上升，哪一个画面最接近你的梦？</h3>
-            <p class="muted">AI 会根据你的选择提取场景、颜色、光线和关键物体，用于视频画面生成。</p>
-            <div class="option-group" data-question="visual">
-              <button class="option selected" data-value="夜晚海边，深紫色天空，远处有一扇发光的门，黑色沙滩和缓慢海浪。"><b>A</b><span>夜晚海边，有发光的门和紫色天空</span></button>
-              <button class="option" data-value="狭长走廊，尽头有一扇打不开的门，灯光忽明忽暗。"><b>B</b><span>狭长走廊，尽头有一扇打不开的门</span></button>
-              <button class="option" data-value="熟悉但变形的房间，门后有暖光，空间像童年记忆。"><b>C</b><span>熟悉房间，门后有暖光和童年感</span></button>
-              <button class="option" data-value=""><b>D</b><span>以上内容都不在梦境中</span></button>
-            </div>
+          <section class="question-panel card">
+            <div class="question-progress" id="questionProgress">1 of 3</div>
+            <div class="question-options" id="questionOptions"></div>
           </section>
 
-          <section class="question-card" data-step="1">
-            <p class="tag">第 2 轮：情绪、氛围与感官</p>
-            <h3>根据梦话“不要走”和呼吸变快，哪种感受更接近梦里的氛围？</h3>
-            <p class="muted">这一轮会同时判断情绪、声音、温度和身体感受。</p>
-            <div class="option-group" data-question="emotion">
-              <button class="option selected" data-value="有点焦虑和孤独，但不是恐怖；能听见远处海浪声或呼唤声，空气偏冷。"><b>A</b><span>焦虑、孤独，远处有人声或海浪声</span></button>
-              <button class="option" data-value="压抑和紧张，像被困住；空间很窄，声音有回声。"><b>B</b><span>压抑、被困住，空间狭窄有回声</span></button>
-              <button class="option" data-value="怀念和温暖，画面柔和；身体像慢慢靠近一束光。"><b>C</b><span>怀念、温暖，像靠近一束光</span></button>
-              <button class="option" data-value=""><b>D</b><span>以上内容都不在梦境中</span></button>
-            </div>
-          </section>
-
-          <section class="question-card" data-step="2">
-            <p class="tag">第 3 轮：人物、事件与结尾</p>
-            <h3>结合“我找不到路”和连续翻身，哪条事件线更像你的梦？</h3>
-            <p class="muted">这一轮会帮助 AI 判断人物、关键事件和梦境结尾。</p>
-            <div class="option-group" data-question="event">
-              <button class="option selected" data-value="一直想追上一个看不清的人；门后像小时候的家，但靠近时门退到更远，最后停在门缝里的暖光。"><b>A</b><span>追一个看不清的人，门后像小时候的家</span></button>
-              <button class="option" data-value="不断寻找出口，却总回到同一个地方；最后停在一扇打不开的门前。"><b>B</b><span>一直找出口，最后回到打不开的门前</span></button>
-              <button class="option" data-value="有人正在离开，你想挽留但说不出话；最后只剩远处的背影或声音。"><b>C</b><span>有人离开，你想挽留但说不出话</span></button>
-              <button class="option" data-value=""><b>D</b><span>以上内容都不在梦境中</span></button>
-            </div>
-          </section>
-
-          <section class="panel">
-            <h3>自由补充</h3>
-            <textarea id="extraInput">醒来以后还有一种想回去看清楚的感觉。</textarea>
-          </section>
-
-          <div class="actions">
-            <button class="secondary" id="prevQuestion">上一轮</button>
-            <button class="primary" id="nextQuestion">下一轮</button>
+          <div class="action-row">
+            <button class="secondary-action" id="skipQuestionBtn" type="button">Skip</button>
+            <button class="primary-action compact" id="nextQuestionBtn" type="button">Next</button>
           </div>
         </section>
 
-        <section class="screen" data-screen="draft">
-          <div class="section-head">
-            <button class="back" data-go="questions">‹</button>
-            <div>
-              <p class="eyebrow">Dream Draft</p>
-              <h2>梦境草稿确认</h2>
-            </div>
+        <section class="screen" data-screen="video">
+          <div class="step-head">
+            <span>Step 3 / 4</span>
+            <h1>Generate Dream Video</h1>
+            <p>Add a few keywords to guide the reconstruction. The prototype uses a built-in demo video.</p>
           </div>
 
-          <section class="panel">
-            <h3>AI 理解到的梦境</h3>
-            <p id="draftText" class="dream-copy"></p>
+          <section class="keyword-panel card">
+            <label for="keywordInput">Dream keywords</label>
+            <input id="keywordInput" type="text" placeholder="e.g. forest, old clock, long-lost friend" />
+            <div class="chips">
+              <button type="button" data-keyword="forest">Forest</button>
+              <button type="button" data-keyword="old clock">Old clock</button>
+              <button type="button" data-keyword="reunion">Reunion</button>
+            </div>
           </section>
 
-          <section class="panel">
-            <h3>微调内容</h3>
-            <textarea id="refineInput" placeholder="如果有不准确的地方，可以在这里修改。">保留海边、门和童年家的感觉，但不要太恐怖，要更像模糊记忆。</textarea>
+          <section class="video-panel card">
+            <video src="./demo.mp4" controls playsinline poster=""></video>
           </section>
 
-          <button class="primary full" id="generateBtn">确认并生成梦境视频</button>
+          <div class="action-row">
+            <button class="secondary-action" type="button" data-go="questions">Back</button>
+            <button class="primary-action compact" type="button" data-go="result">View interpretation</button>
+          </div>
         </section>
 
         <section class="screen" data-screen="result">
-          <div class="section-head">
-            <button class="back" data-go="draft">‹</button>
-            <div>
-              <p class="eyebrow">Result</p>
-              <h2>梦境重现结果</h2>
-            </div>
+          <div class="step-head">
+            <span>Step 4 / 4</span>
+            <h1>Clockwood</h1>
+            <p>Your dream has been reconstructed into a new coordinate.</p>
           </div>
 
-          <section class="video-preview">
-            <div class="moon"></div>
-            <div class="door"></div>
-            <div class="waves"></div>
-            <p>夜海尽头的门</p>
-          </section>
-          <p class="disclaimer">本视频为 AI 艺术化梦境重建，基于睡眠数据与用户描述生成，并非真实梦境记录。</p>
-
-          <section class="panel">
-            <h3>视频生成 Prompt</h3>
-            <p id="videoPrompt" class="prompt"></p>
+          <section class="result-hero card">
+            <span class="material-symbols-rounded">flare</span>
+            <h2>The locked door points to a decision you are ready to open.</h2>
+            <p>
+              The repeated images of keys, water, and a hidden light suggest that you are searching for a calm
+              way to approach something unresolved. Your heart-rate rise during REM sleep makes the dream feel
+              emotionally charged, but the ending carries a clear sense of guidance.
+            </p>
           </section>
 
-          <section class="panel">
-            <h3>分镜脚本</h3>
-            <div id="storyboard" class="storyboard"></div>
+          <section class="saved-card card">
+            <span>Ready to light the map</span>
+            <strong>Clockwood will become today's unlocked landmark.</strong>
           </section>
 
-          <section class="panel">
-            <h3>配乐与音效</h3>
-            <p id="musicText" class="muted"></p>
-          </section>
-
-          <section class="panel">
-            <h3>解梦</h3>
-            <p id="interpretation" class="dream-copy"></p>
-          </section>
-
-          <section class="panel">
-            <h3>健康建议与压力判断</h3>
-            <p id="healthText" class="dream-copy"></p>
-          </section>
-
-          <section class="panel">
-            <h3>AI 相似度分析</h3>
-            <div class="similarity-card">
-              <strong id="similarityValue">82%</strong>
-              <span>预计梦境贴近度</span>
-            </div>
-            <p id="similarityReason" class="dream-copy"></p>
-          </section>
-
-          <div class="actions">
-            <button class="secondary" id="saveBtn">保存到梦境日记</button>
-            <button class="primary" data-go="journal">查看日记</button>
-          </div>
+          <button class="primary-action" id="finishBtn" type="button">
+            <span class="material-symbols-rounded">where_to_vote</span>
+            Light it and return to map
+          </button>
         </section>
 
-        <section class="screen" data-screen="journal">
-          <div class="section-head">
-            <button class="back" data-go="result">‹</button>
-            <div>
-              <p class="eyebrow">Journal</p>
-              <h2>梦境日记</h2>
-            </div>
+        <section class="screen" data-screen="replay">
+          <div class="step-head">
+            <span>Dream Replay</span>
+            <h1 id="replayTitle">Stardust Bay</h1>
+            <p id="replaySubtitle">A saved reconstruction from your dream map.</p>
           </div>
 
-          <section class="journal-list" id="journalList"></section>
+          <section class="video-panel card">
+            <video src="./demo_1.mp4" controls playsinline></video>
+          </section>
+
+          <section class="interpretation card">
+            <h2>Interpretation</h2>
+            <p id="replayText"></p>
+            <blockquote id="replayQuote"></blockquote>
+          </section>
+
+          <button class="primary-action" id="backToMapBtn" type="button">
+            <span class="material-symbols-rounded">map</span>
+            Return to dream map
+          </button>
         </section>
-      </section>
-    </main>
+      </main>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
 
     <script src="./app.js"></script>
   </body>
