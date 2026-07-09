@@ -1,0 +1,6 @@
+services:
+  - type: static
+    name: light-hackathon-2026
+    branch: chaser
+    buildCommand: echo No build needed
+    staticPublishPath: .
