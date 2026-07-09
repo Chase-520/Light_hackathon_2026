@@ -62,7 +62,7 @@ const replayData = {
     subtitle: "Stored dream 1.",
     video: "./assets/dream-replay-2.mp4",
     text:
-      "This dream appears visually active and emotionally charged, suggesting the mind was processing vivid images or unresolved impressions. The moving scene can be read as a sign fo transition, curiosity, or internal momentum rather than distress.",
+      "This dream appears visually active and emotionally charged, suggesting the mind was processing vivid images or unresolved impressions. The moving scene can be read as a sign of transition, curiosity, or internal momentum rather than distress.",
     quote: "The sea keeps the parts of the dream you were not ready to name.",
   },
   station: {
@@ -70,7 +70,7 @@ const replayData = {
     subtitle: "Stored dream 2.",
     video: "./assets/dream-replay-3.mp4",
     text:
-      "The rabbit may suggest gentleness, playfulness, and quick emotional movement. Birds in the sky often point to freedom, perspective, and lightness. Together, this dream reads as a calmer, more open dream record, with curiosity and emotinal release as its main themes.",
+      "The rabbit may suggest gentleness, playfulness, and quick emotional movement. Birds in the sky often point to freedom, perspective, and lightness. Together, this dream reads as a calmer, more open dream record, with curiosity and emotional release as its main themes.",
     quote: "The reflection moves first, and you follow when you are ready.",
   },
   forest: {
