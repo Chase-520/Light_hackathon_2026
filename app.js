@@ -7,6 +7,7 @@ const backToMapBtn = document.querySelector("#backToMapBtn");
 const toast = document.querySelector("#toast");
 const unlockCount = document.querySelector("#unlockCount");
 const todayLandmark = document.querySelector("#todayLandmark");
+const mapViewport = document.querySelector("#mapViewport");
 const mapInfo = document.querySelector("#mapInfo");
 const questionTitle = document.querySelector("#questionTitle");
 const questionHint = document.querySelector("#questionHint");
@@ -19,6 +20,7 @@ const replayTitle = document.querySelector("#replayTitle");
 const replaySubtitle = document.querySelector("#replaySubtitle");
 const replayText = document.querySelector("#replayText");
 const replayQuote = document.querySelector("#replayQuote");
+const replayVideo = document.querySelector("#replayVideo");
 
 let activeScreen = "map";
 let todayLit = false;
@@ -57,14 +59,24 @@ const questions = [
 const replayData = {
   bay: {
     title: "Stardust Bay",
-    subtitle: "Default landmark unlocked on your first login.",
+    subtitle: "Stored dream 1.",
+    video: "./demo_1.mp4",
     text:
       "This dream reconstruction centers on drifting light and distant shorelines. It suggests a desire to rest before moving toward something unfamiliar.",
     quote: "The sea keeps the parts of the dream you were not ready to name.",
   },
+  station: {
+    title: "Mirror Station",
+    subtitle: "Stored dream 2.",
+    video: "./demo_2.mp4",
+    text:
+      "This dream holds reflections, platforms, and a sense of waiting. It suggests you are comparing who you have been with the direction you are quietly preparing to take.",
+    quote: "The reflection moves first, and you follow when you are ready.",
+  },
   forest: {
     title: "Clockwood",
     subtitle: "Today's newly lit dream coordinate.",
+    video: "./demo.mp4",
     text:
       "A locked door, an old clock, and a hidden key point to a decision that has waited long enough. The dream feels tense, but its ending is hopeful.",
     quote: "The light appears only after you stop forcing the door.",
@@ -127,23 +139,35 @@ function lightTodayLandmark() {
   todayLit = true;
   todayLandmark.classList.remove("locked");
   todayLandmark.classList.add("unlocked", "newly-lit");
-  todayLandmark.querySelector("text").textContent = "C";
-  unlockCount.textContent = "2 / 8 landmarks unlocked";
+  todayLandmark.querySelector("text").textContent = "3";
+  unlockCount.textContent = "3 / 8 landmarks unlocked";
   mapInfo.querySelector("small").textContent = "Today's lit landmark";
   mapInfo.querySelector("h2").textContent = "Clockwood";
   mapInfo.querySelector("p").textContent =
-    "A new coordinate is now lit. Tap any unlocked landmark to replay its video and interpretation.";
+    "A new coordinate is now lit with today's generated dream video. Tap it to replay the reconstruction.";
 
+  mapViewport.scrollTo({ left: 330, top: 0, behavior: "smooth" });
   window.setTimeout(() => todayLandmark.classList.remove("newly-lit"), 1700);
 }
 
 function openReplay(id) {
   const data = replayData[id] || replayData.bay;
+  replayVideo.pause();
+  replayVideo.src = data.video;
+  replayVideo.load();
   replayTitle.textContent = data.title;
   replaySubtitle.textContent = data.subtitle;
   replayText.textContent = data.text;
   replayQuote.textContent = data.quote;
   showScreen("replay");
+}
+
+function activateLandmark(landmark) {
+  if (!landmark.classList.contains("unlocked")) {
+    showToast(`${landmark.dataset.title} is still locked.`);
+    return;
+  }
+  openReplay(landmark.dataset.id);
 }
 
 function goBack() {
@@ -152,6 +176,64 @@ function goBack() {
   else if (activeScreen === "video") showScreen("questions");
   else if (activeScreen === "result") showScreen("video");
 }
+
+function setupDraggableMap() {
+  let isDragging = false;
+  let didDrag = false;
+  let startX = 0;
+  let startY = 0;
+  let scrollLeft = 0;
+  let scrollTop = 0;
+  let pressedLandmark = null;
+
+  mapViewport.scrollLeft = 220;
+  mapViewport.scrollTop = 86;
+
+  mapViewport.addEventListener("pointerdown", (event) => {
+    isDragging = true;
+    didDrag = false;
+    pressedLandmark = event.target instanceof Element ? event.target.closest(".landmark") : null;
+    startX = event.clientX;
+    startY = event.clientY;
+    scrollLeft = mapViewport.scrollLeft;
+    scrollTop = mapViewport.scrollTop;
+    mapViewport.classList.add("dragging");
+    mapViewport.setPointerCapture(event.pointerId);
+  });
+
+  mapViewport.addEventListener("pointermove", (event) => {
+    if (!isDragging) return;
+    const dx = event.clientX - startX;
+    const dy = event.clientY - startY;
+    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) didDrag = true;
+    mapViewport.scrollLeft = scrollLeft - dx;
+    mapViewport.scrollTop = scrollTop - dy;
+  });
+
+  const stopDrag = (event) => {
+    if (!isDragging) return;
+    const shouldOpenLandmark = pressedLandmark && !didDrag;
+    isDragging = false;
+    mapViewport.classList.remove("dragging");
+    if (mapViewport.hasPointerCapture(event.pointerId)) {
+      mapViewport.releasePointerCapture(event.pointerId);
+    }
+    if (shouldOpenLandmark) {
+      activateLandmark(pressedLandmark);
+    }
+    pressedLandmark = null;
+    window.setTimeout(() => {
+      didDrag = false;
+    }, 0);
+  };
+
+  mapViewport.addEventListener("pointerup", stopDrag);
+  mapViewport.addEventListener("pointercancel", stopDrag);
+
+  return () => didDrag;
+}
+
+const mapWasDragged = setupDraggableMap();
 
 document.querySelectorAll("[data-go]").forEach((button) => {
   button.addEventListener("click", () => showScreen(button.dataset.go));
@@ -176,19 +258,10 @@ document.querySelectorAll("[data-keyword]").forEach((chip) => {
 });
 
 document.querySelectorAll(".landmark").forEach((landmark) => {
-  const activate = () => {
-    if (!landmark.classList.contains("unlocked")) {
-      showToast(`${landmark.dataset.title} is still locked.`);
-      return;
-    }
-    openReplay(landmark.dataset.id);
-  };
-
-  landmark.addEventListener("click", activate);
   landmark.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      activate();
+      activateLandmark(landmark);
     }
   });
 });

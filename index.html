@@ -36,50 +36,58 @@
           <section class="map-hero">
             <p>Dream Map</p>
             <h1>Light the coordinates left by last night's dream</h1>
-            <span id="unlockCount">1 / 8 landmarks unlocked</span>
+            <span id="unlockCount">2 / 8 landmarks unlocked</span>
           </section>
 
           <section class="dream-map card" aria-label="Interactive dream map">
-            <svg viewBox="0 0 360 460" role="img" aria-label="Oneiros dream map">
-              <defs>
-                <linearGradient id="mapLine" x1="0" x2="1" y1="0" y2="1">
-                  <stop offset="0" stop-color="#D8D0C3" />
-                  <stop offset="1" stop-color="#9EAA9F" />
-                </linearGradient>
-                <filter id="softGlow">
-                  <feGaussianBlur stdDeviation="4" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-              <path class="map-path" d="M52 378 C86 305, 58 252, 126 218 S230 198, 212 132 S257 60, 310 82" />
-              <path class="map-path faint" d="M42 120 C94 102, 129 132, 162 94 S234 36, 302 54" />
-              <path class="map-path faint" d="M70 414 C150 395, 195 420, 302 350" />
+            <div class="map-viewport" id="mapViewport" aria-label="Drag to explore stored dreams">
+              <svg class="map-canvas" viewBox="0 0 760 860" role="img" aria-label="Oneiros dream map">
+                <defs>
+                  <linearGradient id="mapLine" x1="0" x2="1" y1="0" y2="1">
+                    <stop offset="0" stop-color="#D8D0C3" />
+                    <stop offset="1" stop-color="#9EAA9F" />
+                  </linearGradient>
+                  <filter id="softGlow">
+                    <feGaussianBlur stdDeviation="4" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                <path class="map-path" d="M92 690 C134 552, 90 430, 206 374 S388 340, 356 196 S500 86, 616 156 S676 332, 704 262" />
+                <path class="map-path faint" d="M42 156 C130 96, 194 164, 252 104 S386 44, 484 84 S628 124, 716 74" />
+                <path class="map-path faint" d="M82 774 C214 704, 330 792, 464 590 S610 512, 724 612" />
+                <path class="map-path faint" d="M224 826 C250 656, 344 520, 462 496 S634 430, 702 310" />
+                <path class="map-path faint" d="M60 338 C166 300, 260 512, 374 448 S576 332, 712 414" />
 
-              <g class="landmark unlocked" data-id="bay" data-title="Stardust Bay" transform="translate(68 365)" tabindex="0">
-                <circle r="18" />
-                <text y="6">L</text>
-              </g>
-              <g class="landmark locked" id="todayLandmark" data-id="forest" data-title="Clockwood" transform="translate(135 218)" tabindex="0">
-                <circle r="18" />
-                <text y="6">?</text>
-              </g>
-              <g class="landmark locked" data-id="station" data-title="Mirror Station" transform="translate(214 132)" tabindex="0">
-                <circle r="18" />
-                <text y="6">?</text>
-              </g>
-              <g class="landmark locked" data-id="corridor" data-title="Moonlit Corridor" transform="translate(310 82)" tabindex="0">
-                <circle r="18" />
-                <text y="6">?</text>
-              </g>
-            </svg>
+                <g class="landmark unlocked" data-id="bay" data-title="Stardust Bay" transform="translate(92 690)" tabindex="0">
+                  <circle r="20" />
+                  <text y="7">1</text>
+                </g>
+                <g class="landmark unlocked" data-id="station" data-title="Mirror Station" transform="translate(356 196)" tabindex="0">
+                  <circle r="20" />
+                  <text y="7">2</text>
+                </g>
+                <g class="landmark locked" id="todayLandmark" data-id="forest" data-title="Clockwood" transform="translate(616 156)" tabindex="0">
+                  <circle r="20" />
+                  <text y="7">?</text>
+                </g>
+                <g class="landmark locked" data-id="corridor" data-title="Moonlit Corridor" transform="translate(704 262)" tabindex="0">
+                  <circle r="20" />
+                  <text y="7">?</text>
+                </g>
+                <g class="landmark locked" data-id="harbor" data-title="Quiet Harbor" transform="translate(464 590)" tabindex="0">
+                  <circle r="20" />
+                  <text y="7">?</text>
+                </g>
+              </svg>
+            </div>
 
             <article class="map-card" id="mapInfo">
-              <small>Default unlocked landmark</small>
+              <small>Drag the map to browse saved dreams</small>
               <h2>Stardust Bay</h2>
-              <p>Tap unlocked landmarks to replay the generated dream video and interpretation.</p>
+              <p>Two past dreams are already stored. Tap lit landmarks to replay their generated videos.</p>
             </article>
           </section>
 
@@ -202,7 +210,7 @@
           </div>
 
           <section class="video-panel card">
-            <video src="./demo_1.mp4" controls playsinline></video>
+            <video id="replayVideo" src="./demo_1.mp4" controls playsinline></video>
           </section>
 
           <section class="interpretation card">
