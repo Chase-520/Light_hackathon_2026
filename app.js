@@ -62,7 +62,7 @@ const replayData = {
     subtitle: "Stored dream 1.",
     video: "./demo_1.mp4",
     text:
-      "This dream reconstruction centers on drifting light and distant shorelines. It suggests a desire to rest before moving toward something unfamiliar.",
+      "This dream appears visually active and emotionally charged, suggesting the mind was processing vivid images or unresolved impressions. The moving scene can be read as a sign fo transition, curiosity, or internal momentum rather than distress.",
     quote: "The sea keeps the parts of the dream you were not ready to name.",
   },
   station: {
@@ -70,7 +70,7 @@ const replayData = {
     subtitle: "Stored dream 2.",
     video: "./demo_2.mp4",
     text:
-      "This dream holds reflections, platforms, and a sense of waiting. It suggests you are comparing who you have been with the direction you are quietly preparing to take.",
+      "The rabbit may suggest gentleness, playfulness, and quick emotional movement. Birds in the sky often point to freedom, perspective, and lightness. Together, this dream reads as a calmer, more open dream record, with curiosity and emotinal release as its main themes.",
     quote: "The reflection moves first, and you follow when you are ready.",
   },
   forest: {
